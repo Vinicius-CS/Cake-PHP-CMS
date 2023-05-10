@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  php-fpm:
+    image: webdevops/php-nginx:8.1
+    container_name: cakeapp-webserver
+    working_dir: /cakeapp
+    volumes:
+      - ./:/cakeapp
+    environment:
+      - WEB_DOCUMENT_ROOT=/cakeapp/webroot
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:5.6
+    container_name: cakeapp-mysql
+    working_dir: /cakeapp
+    volumes:
+      - .:/cakeapp
+      - ./tmp/data/mysql_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=cake_php
+    command: mysqld --character-set-server=utf8 --init-connect='SET NAMES UTF8;'
+    ports:
+      - "3307:3306"
